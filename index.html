@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNU/Linux</title>
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #0c0c0e;
+            --bg-inner: #131317;
+            --border-main: #222227;
+            --border-hover: #3f3f46;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-glow: rgba(255, 255, 255, 0.03);
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            padding: 4rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 920px;
+            width: 100%;
+        }
+
+        /* Header Principal */
+        header {
+            border-bottom: 1px solid var(--border-main);
+            padding-bottom: 3rem;
+            margin-bottom: 3.5rem;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid var(--border-main);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 1.2rem;
+            background: var(--bg-card);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 750px;
+            margin: 0 auto 2.5rem auto;
+            font-weight: 400;
+        }
+
+        /* Grid de métricas */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            text-align: left;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-main);
+            padding: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .metric-val {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            border-left: 1px solid var(--border-main);
+            padding-left: 2.2rem;
+            margin-left: 0.8rem;
+        }
+
+        .event-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-main);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            transition: all 0.25s ease;
+        }
+
+        .event-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            left: -2.55rem;
+            top: 2.3rem;
+            width: 9px;
+            height: 9px;
+            background: var(--bg-body);
+            border: 2px solid var(--text-secondary);
+            border-radius: 50%;
+        }
+
+        .event-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .event-year {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--bg-inner);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-main);
+        }
+
+        .event-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            letter-spacing: -0.3px;
+        }
+
+        /* Niveles de Lectura */
+        .level-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.2rem;
+        }
+
+        .level-box {
+            background: var(--bg-inner);
+            border: 1px solid var(--border-main);
+            border-radius: 8px;
+            padding: 1.2rem;
+        }
+
+        .level-title {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .level-beginner .level-title { color: #a1a1aa; }
+        .level-pro .level-title { color: #e4e4e7; }
+
+        .level-box p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .pro-list {
+            list-style: none;
+            margin-top: 0.6rem;
+        }
+
+        .pro-list li {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .pro-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Arte ASCII a Color al Final */
+        .ascii-footer-container {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-main);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .ascii-art {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            line-height: 1.15;
+            display: inline-block;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Clases de color para el arte ASCII */
+        .c-yellow { color: #facc15; }
+        .c-white  { color: #ffffff; }
+        .c-gray   { color: #71717a; }
+        .c-orange { color: #fb923c; }
+
+        .ascii-quote {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #e4e4e7;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        .ascii-author {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-main);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <span class="badge">Linux</span>
+            <h1>GNU/Linux</h1>
+            <p class="subtitle">Análisis profundo sobre la creación, expansión y dominio tecnológico del sistema operativo libre que transforma el mundo.</p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val">100%</div>
+                    <div class="metric-label">Top 500 Supercomputadoras</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">30M+</div>
+                    <div class="metric-label">Líneas de Código (Kernel)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">1991</div>
+                    <div class="metric-label">Año Lanzamiento Kernel 0.01</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">&gt;3.0B</div>
+                    <div class="metric-label">Dispositivos Activos Android</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="timeline">
+
+            <!-- 1. 1983 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">1983</span>
+                    <span class="event-tag">Fundación & Filosofía</span>
+                </div>
+                <h2 class="event-title">El Proyecto GNU y la Filosofía del Software Libre</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Antes, el código de las computadoras era secreto. Richard Stallman creó el Proyecto GNU para construir un sistema operativo libre que cualquier persona pudiera usar, modificar y compartir libremente sin restricciones ni costos ocultos.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Se crearon las 4 libertades del software y la licencia Copyleft (GPL v1). Se reescribieron desde cero las utilidades esenciales de espacio de usuario compatibles con POSIX/UNIX:</p>
+                        <ul class="pro-list">
+                            <li><strong>GCC (GNU Compiler Collection):</strong> La suite de compilación en C indispensable.</li>
+                            <li><strong>Bash & Coreutils:</strong> Shell interactiva y binarios esenciales (`ls`, `grep`, `cat`, `tar`).</li>
+                            <li><strong>GLIBC:</strong> Biblioteca C base que sirve de puente entre software y llamadas al sistema.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 1991 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">1991</span>
+                    <span class="event-tag">Arquitectura de Kernel</span>
+                </div>
+                <h2 class="event-title">El Nacimiento del Kernel Linux</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla</div>
+                        <p>Al proyecto GNU le faltaba el "motor" principal que conecta el programa con el procesador y la memoria RAM. Linus Torvalds, con 21 años, programó ese núcleo desde su habitación y lo publicó gratis en Internet.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Núcleo monolítico desarrollado en C para la arquitectura Intel 80386 en modo protegido de 32 bits:</p>
+                        <ul class="pro-list">
+                            <li><strong>Versión 0.01 (Sept 1991):</strong> 10,000 líneas de código, sin soporte de red, ejecutable solo en hardware específico.</li>
+                            <li><strong>Versión 0.02 (Oct 1991):</strong> Capaz de ejecutar Bash y GCC sobre sí mismo.</li>
+                            <li><strong>Licencia GPL v2 (1992):</strong> Permitía acoplar libremente el núcleo de Linus con las herramientas de espacio de usuario de GNU.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 1992 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">1992</span>
+                    <span class="event-tag">Debate Histórico</span>
+                </div>
+                <h2 class="event-title">El Debate Tanenbaum-Torvalds: Microkernels vs Monolíticos</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Un famoso profesor de informática llamado Andrew Tanenbaum dijo públicamente que Linux estaba obsoleto antes de nacer por estar diseñado como un "bloque gigante". Linus defendió que ese diseño era mucho más rápido y práctico para computadoras reales.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Debate célebre en Usenet (`comp.os.minix`) sobre arquitectura de sistemas operativos:</p>
+                        <ul class="pro-list">
+                            <li><strong>Microkernel (Minix/Mach):</strong> Aísla drivers y sistemas de archivos en espacio de usuario. Más seguro pero con penalizaciones de rendimiento por cambio de contexto (context switching).</li>
+                            <li><strong>Monolítico (Linux):</strong> Todo el código crítico corre en espacio de núcleo (Ring 0). Máximo rendimiento y llamadas al sistema ultra rápidas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 1993 - 1994 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">1993 - 1994</span>
+                    <span class="event-tag">Ecosistema & Distros</span>
+                </div>
+                <h2 class="event-title">Surgimiento de Slackware, Debian y Red Hat</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Instalar Linux en los 90 requería decenas de disquetes y configurar todo a mano. Nacieron las "distribuciones", que empaquetaban el motor, los programas y un instalador para facilitar el proceso.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Se estructuraron las tres grandes familias de empaquetado del software libre:</p>
+                        <ul class="pro-list">
+                            <li><strong>Slackware (1993):</strong> Diseñada por Patrick Volkerding. La distro más antigua en activo, basada en la filosofía UNIX pura (KISS).</li>
+                            <li><strong>Debian (1993):</strong> Creada por Ian Murdock. Introdujo los paquetes `.deb` y la gestión de dependencias con `dpkg`/`APT`.</li>
+                            <li><strong>Red Hat (1994):</strong> Creadora del formato `.rpm`. Sentó las bases para los servidores empresariales y de misión crítica.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 1996 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">1996</span>
+                    <span class="event-tag">Identidad & Servidores Web</span>
+                </div>
+                <h2 class="event-title">La Era LAMP, Tux y la Revolución de Internet</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Se creó a Tux, el simpático pingüino que representa a Linux. Al mismo tiempo, las primeras páginas web del mundo empezaron a funcionar sobre servidores Linux por ser ultra estables y no caerse jamás.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Consolidación del stack **LAMP** (Linux, Apache, MySQL, PHP) como la columna vertebral del World Wide Web:</p>
+                        <ul class="pro-list">
+                            <li><strong>Kernel 2.0:</strong> Introdujo soporte nativo para multiprocesamiento simétrico (SMP) y arquitecturas multi-núcleo.</li>
+                            <li><strong>Mascota Oficial:</strong> Larry Ewing diseña a Tux usando el programa de diseño libre GIMP.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. 2004 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">2004</span>
+                    <span class="event-tag">Usabilidad de Escritorio</span>
+                </div>
+                <h2 class="event-title">Ubuntu y la Humanización del Escritorio</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Usar Linux solía requerir aprender líneas de comando difíciles. Ubuntu demostró que Linux podía ser tan bonito, fácil e intuitivo como Windows o Mac, regalando discos de instalación por correo a todo el mundo.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Canonical (fundada por Mark Shuttleworth) crea Ubuntu tomando la rama inestable de Debian:</p>
+                        <ul class="pro-list">
+                            <li><strong>Ciclos LTS:</strong> Normalizó actualizaciones cada 6 meses y versiones Long-Term Support con 5 años de parches de seguridad.</li>
+                            <li><strong>PPA & Controladores:</strong> Simplificación en la compilación e instalación de controladores propietarios (Nvidia, Wi-Fi).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. 2005 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">2005</span>
+                    <span class="event-tag">Control de Versiones</span>
+                </div>
+                <h2 class="event-title">Linus Torvalds Crea Git en un Fin de Semana</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Para coordinar a miles de programadores en todo el mundo sin que se sobreescriban el trabajo, Linus inventó **Git**. Hoy en día, casi todo el código del planeta (incluyendo GitHub) funciona gracias a esta herramienta.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Tras la revocación de la licencia gratuita del software BitKeeper, Linus diseñó un sistema de control de versiones distribuido (DVCS) descentralizado:</p>
+                        <ul class="pro-list">
+                            <li><strong>Rendimiento Extremo:</strong> Basado en grafos acíclicos dirigidos (DAG) y hashes SHA-1 para garantizar integridad.</li>
+                            <li><strong>Aislamiento de Ramas:</strong> Permite ramificaciones (`branching`) y fusiones (`merging`) ultrarrápidas a escala masiva.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. 2006 - 2011 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">2006 - 2011</span>
+                    <span class="event-tag">Escritorio Elegante & Mint</span>
+                </div>
+                <h2 class="event-title">Surgimiento de Linux Mint y los Entornos Modernos</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Cuando Ubuntu cambió su diseño visual radicalmente, nació **Linux Mint**. Ofreció un escritorio clásico, rápido, elegante y listo para usar con todos los códecs de audio y video preinstalados.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Evolución de los servidores gráficos y entornos de escritorio (Desktop Environments):</p>
+                        <ul class="pro-list">
+                            <li><strong>Entorno Cinnamon:</strong> Fork ligero y altamente modular de GNOME 3 desarrollado por el equipo de Clement Lefebvre.</li>
+                            <li><strong>Filosofía Out-of-the-Box:</strong> Enfoque en la estabilidad del sistema base (Ubuntu/Debian LTS) eliminando la telemetría innecesaria.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. 2013 -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">2013</span>
+                    <span class="event-tag">Virtualización & Nube</span>
+                </div>
+                <h2 class="event-title">La Era de los Contenedores: Docker y Kubernetes</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Se inventó una forma de empaquetar aplicaciones en "cajas virtuales" (contenedores) que llevan todo lo necesario adentro. Esto permite que un programa funcione exactamente igual en la computadora de un estudiante que en miles de servidores de Amazon.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Uso avanzado de características nativas del Kernel Linux para aislamiento eficiente de recursos:</p>
+                        <ul class="pro-list">
+                            <li><strong>Cgroups (Control Groups) & Namespaces:</strong> Aislamiento de procesos, interfaces de red, memoria y espacio de disco sin el sobrecosto de una máquina virtual completa.</li>
+                            <li><strong>Orquestación con Kubernetes:</strong> Estándar mundial para desplegar microservicios a gran escala sobre servidores Linux en la nube.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Presente -->
+            <div class="event-card">
+                <div class="event-meta">
+                    <span class="event-year">Presente</span>
+                    <span class="event-tag">Dominio Global & Futuro</span>
+                </div>
+                <h2 class="event-title">El Monopolio Silencioso: Nube, IA y Supercomputación</h2>
+                
+                <div class="level-section">
+                    <div class="level-box level-beginner">
+                        <div class="level-title">💡 Explicación Sencilla (Principiante)</div>
+                        <p>Hoy en día, Linux es el rey absoluto de la tecnología global: está en más de 3,000 millones de celulares Android, en los robots que exploran Marte, en las consolas como la Steam Deck y en todos los servidores que procesan Inteligencia Artificial.</p>
+                    </div>
+
+                    <div class="level-box level-pro">
+                        <div class="level-title">⚙️ Análisis Técnico (Profesional)</div>
+                        <p>Liderazgo técnico en la infraestructura de computación de alto rendimiento (HPC):</p>
+                        <ul class="pro-list">
+                            <li><strong>eBPF & Kernel Moderno:</strong> Ejecución de código seguro dentro del núcleo para monitorización y seguridad de red a velocidad de hardware.</li>
+                            <li><strong>Empaquetado Universal:</strong> Adopción de formatos de espacio de usuario aislados como Flatpak, AppImage y Snaps.</li>
+                            <li><strong>Supercomputación e IA:</strong> El 100% de las 500 supercomputadoras más potentes de la lista TOP500 y los clústers de entrenamiento de Inteligencia Artificial (NVIDIA CUDA) corren Linux.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ARTE ASCII A COLOR AL FINAL DE LA PÁGINA -->
+        <div class="ascii-footer-container">
+            <pre class="ascii-art"><span class="c-gray">         .---.</span>
+<span class="c-gray">        |</span><span class="c-white">o_o</span><span class="c-gray"> |</span>
+<span class="c-gray">        |</span><span class="c-orange">:_/</span><span class="c-gray"> |</span>
+<span class="c-gray">       //</span>   <span class="c-gray">\\</span>
+<span class="c-orange">      (|</span>     <span class="c-orange">|)</span>
+<span class="c-orange">     /'\_   _/`\</span>
+<span class="c-yellow">     \___)=(___/</span></pre>
+            <div class="ascii-quote">"Talk is cheap. Show me the code."</div>
+            <div class="ascii-author">— Linus Torvalds</div>
+        </div>
+
+        <footer>
+            Proyecto de Divulgación Open Source // Generado para la Comunidad Informática
+        </footer>
+    </div>
+
+</body>
+</html>
